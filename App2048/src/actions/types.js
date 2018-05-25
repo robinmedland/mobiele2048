@@ -5,3 +5,6 @@ export const LOGIN_USER_FAIL = 'login_user_fail';
 export const LOGIN_USER = 'login_user';
 export const LOGOUT_USER = 'logout_user';
 export const LOGOUT_USER_SUCCES = 'logout_user_succes';
+
+export const PLAYER_UPDATE = 'player_update';
+export const PLAYER_CREATE = 'player_create';
