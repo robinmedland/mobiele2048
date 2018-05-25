@@ -3,7 +3,9 @@ import {
     PASSWORD_CHANGED,
     LOGIN_USER_SUCCESS,
     LOGIN_USER_FAIL,
-    LOGIN_USER
+    LOGIN_USER,
+    LOGOUT_USER_SUCCES,
+    LOGOUT_USER
   } from '../actions/types';
   
   const INITIAL_STATE = {
@@ -26,7 +28,13 @@ import {
         return { ...state, ...INITIAL_STATE, user: action.payload };
       case LOGIN_USER_FAIL:
         return { ...state, error: 'Authentication Failed.', password: '', loading: false };
-      default:
+      case LOGOUT_USER:
+        console.log('LogOut REDUCER');
+        return { ...state, loading: true };
+      case LOGOUT_USER_SUCCES:
+        console.log('LOGOUTSUCCES REDUCER');
+        return { ...state, ...INITIAL_STATE };
+        default:
         return state;
     }
   };
