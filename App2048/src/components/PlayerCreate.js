@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { connect, Keyboard } from 'react-redux';
+import { connect } from 'react-redux';
 import { playerUpdate, playerCreate } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 

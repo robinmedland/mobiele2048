@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
+import GameRow from './GameRow';
 
 
-class GameBoard extends Component {    
+class GameBoard extends Component {
+    renderGameRows() {
+        const rows = [];
+        for (let i = 0; i < 4; i++) {
+            rows.push(
+                <GameRow />
+            );
+        }
+        return rows;
+    }        
     render() {        
         return (
                 
                 <View style={[styles.parent]}>
-                <View style={[styles.child, { backgroundColor: '#996666' }]} />
-                <View style={[styles.child, { backgroundColor: '#339966' }]} />
-                <View style={[styles.child, { backgroundColor: '#996633' }]} />
-                <View style={[styles.child, { backgroundColor: '#669933' }]} />
+                    {this.renderGameRows()}
                 </View>
               
         );
@@ -22,11 +29,6 @@ const styles = {
         flexDirection: 'row', 
         flexWrap: 'wrap'
     },
-    child: {
-        width: '48%', 
-        margin: '1%', 
-        aspectRatio: 1,
-    }
 };
 
 export default GameBoard;
