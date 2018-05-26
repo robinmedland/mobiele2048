@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { connect, Keyboard } from 'react-redux';
 import { playerUpdate, playerCreate } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class PlayerCreate extends Component {
     onButtonPress() {        
-        const { name, highscore } = this.props;      
-        this.props.playerCreate({ name, highscore });
+        const { name, highscore } = this.props;           
+        this.props.playerCreate({ name, highscore });         
     }
     renderButton() {
         if (this.props.loading) {

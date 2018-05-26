@@ -7,14 +7,21 @@ import { playerDelete } from '../../actions';
 
 class Game extends Component {   
     //Dit is een bug van esslint, code werkt wel
-    state = { showModal: false };
+    state = { showDeleteModal: false, showRestartModal: false };
+      
 
-    onAccept() {
+    onAcceptDelete() {
         const { uid } = this.props.player.item;
         this.props.playerDelete({ uid });
     }
-    onDecline() {
-        this.setState({ showModal: false });
+    onDeclineDelete() {
+        this.setState({ showDeleteModal: false });
+    }
+    onAcceptRestart() {
+        console.log('yes');
+    }
+    onDeclineRestart() {
+        this.setState({ showRestartModal: false });
     }
 
     render() {
@@ -37,21 +44,35 @@ class Game extends Component {
                     <GameBoard />                    
                 </CardSection>
                 <CardSection>
-                    <Button>
-                        Restart Game
-                    </Button>
+                    <Button 
+                    onPress={() => 
+                    this.setState({ showRestartModal: !this.state.showRestartModal })}
+                    >
+                       Restart
+                    </Button> 
                 </CardSection>
                 
                 <CardSection>
-                    <Button onPress={() => this.setState({ showModal: !this.state.showModal })}>
+                    <Button 
+                    onPress={() => 
+                    this.setState({ showDeleteModal: !this.state.showDeleteModal })}
+                    >
                         Delete Player
                     </Button>               
                 </CardSection>
+                <Confirm
+                    visible={this.state.showRestartModal}
+                    onAccept={this.onAcceptRestart.bind(this)}
+                    onDecline={this.onDeclineRestart.bind(this)}
+
+                >
+                Do you want to restart the game?
+                </Confirm>
 
                 <Confirm
-                    visible={this.state.showModal}
-                    onAccept={this.onAccept.bind(this)}
-                    onDecline={this.onDecline.bind(this)}
+                    visible={this.state.showDeleteModal}
+                    onAccept={this.onAcceptDelete.bind(this)}
+                    onDecline={this.onDeclineDelete.bind(this)}
                 >
                         Do you want to delete this player?
                 </Confirm>
