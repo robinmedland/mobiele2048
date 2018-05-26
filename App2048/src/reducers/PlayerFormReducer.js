@@ -1,10 +1,13 @@
 import {
     PLAYER_UPDATE,
-    PLAYER_CREATE
+    PLAYER_CREATE,
+    PLAYER_CREATE_SUCCES
 } from '../actions/types';
 
 const INITIAL_STATE = {
-    name: ''
+    name: '',
+    loading: false,
+    highscore: '0'
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -12,7 +15,9 @@ export default (state = INITIAL_STATE, action) => {
         case PLAYER_UPDATE:
             return { ...state, [action.payload.prop]: action.payload.value };
         case PLAYER_CREATE:
-            return INITIAL_STATE;
+            return { ...state, loading: true };
+        case PLAYER_CREATE_SUCCES:
+            return { ...state, INITIAL_STATE };
         default:
             return state;
     }

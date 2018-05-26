@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { playerUpdate, playerCreate } from '../actions';
-import { Card, CardSection, Input, Button } from './common';
+import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class PlayerCreate extends Component {
-    onButtonPres() {
-        const { name } = this.props;
-
-        this.props.playerCreate({ name });
+    onButtonPress() {        
+        const { name, highscore } = this.props;      
+        this.props.playerCreate({ name, highscore });
     }
+    renderButton() {
+        if (this.props.loading) {
+          return <Spinner size="large" />;
+        }
+    
+        return (
+          <Button onPress={this.onButtonPress.bind(this)}>
+            Create
+          </Button>
+        );
+      }
     render() {
         return (
             <Card>
@@ -22,9 +32,7 @@ class PlayerCreate extends Component {
                     />
                 </CardSection>
                 <CardSection>
-                    <Button onPress={this.onButtonPres.bind(this)}>
-                        Create
-                    </Button>
+                    {this.renderButton()}
                 </CardSection>
             </Card>
                 
@@ -32,8 +40,8 @@ class PlayerCreate extends Component {
     }
 }
 const mapStateToProps = (state) => {
-    const { name } = state.playerForm;
-    return { name };
+    const { name, loading, highscore } = state.playerForm;
+    return { name, loading, highscore };
 };
 
 export default connect(mapStateToProps, { playerUpdate, playerCreate })(PlayerCreate);

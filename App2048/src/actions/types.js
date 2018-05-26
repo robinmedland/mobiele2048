@@ -8,3 +8,4 @@ export const LOGOUT_USER_SUCCES = 'logout_user_succes';
 
 export const PLAYER_UPDATE = 'player_update';
 export const PLAYER_CREATE = 'player_create';
+export const PLAYER_CREATE_SUCCES = 'player_create_succes';
