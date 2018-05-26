@@ -8,7 +8,7 @@ class GameBoard extends Component {
         const rows = [];
         for (let i = 0; i < 4; i++) {
             rows.push(
-                <GameRow />
+                <GameRow key={i} />
             );
         }
         return rows;
