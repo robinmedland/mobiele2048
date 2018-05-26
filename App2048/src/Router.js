@@ -3,6 +3,7 @@ import { Scene, Router, Actions } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import PlayerList from './components/PlayerList';
 import PlayerCreate from './components/PlayerCreate';
+import Game from './components/game/Game';
 
 const RouterComponent = () => {
   return (
@@ -25,6 +26,11 @@ const RouterComponent = () => {
             key="playerCreate" 
             title="Create Player" 
             component={PlayerCreate}
+          />
+          <Scene
+            key="Game"
+            title="2048 Crush Records"
+            component={Game}
           />
         </Scene>
       </Scene>

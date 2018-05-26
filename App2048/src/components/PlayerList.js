@@ -1,46 +1,40 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
-import { Text } from 'react-native';
+import { FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Card, CardSection, Button, Spinner } from './common';
-import { logOutUser } from '../actions';
+import { Card, CardSection } from './common';
+import { playersFetch } from '../actions';
+import LogoutButton from './LogoutButton';
+import PlayerItem from './PlayerItem';
 
 class PlayerList extends Component {  
-  onButtonPress() {
-    console.log('LogOut Clicked');
-    this.props.logOutUser();
+  componentWillMount() {
+    this.createDataSource();
+  }
+  createDataSource() {
+    this.props.playersFetch();
   }
 
-  renderButton() {
-    if (this.props.loading) {
-      return <Spinner size="large" />;
-    }
-
-    return (
-      <Button onPress={this.onButtonPress.bind(this)}>
-        Log Out
-      </Button>
-    );
+  renderRow(player) {
+    return <PlayerItem player={player} />;
   }
-  
+
+ 
   render() {
+    console.log(this.props);
     return (
       <Card>
         <CardSection>
           <Text style={styles.titleStyle}>Druk op je naam om een spel te starten!</Text>
         </CardSection>
-        <CardSection>  
-          <Text>Player 1</Text>
-        </CardSection>
-        <CardSection>  
-          <Text>Player 2</Text>
-        </CardSection> 
-        <CardSection>  
-          <Text>Player 3</Text>
-        </CardSection>     
-        <CardSection>
-          {this.renderButton()}
-        </CardSection>
-            
+         
+        <FlatList 
+        data={this.props.players}
+        renderItem={this.renderRow}
+        keyExtractor={player => player.uid}
+        /> 
+           
+        <LogoutButton />                   
       </Card>
     );
   }
@@ -53,10 +47,13 @@ const styles = {
     marginBottom: 10,    
   }
 };
-const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
 
-  return { email, password, error, loading };
+const mapStateToProps = state => {
+  const players = _.map(state.players, (val, uid) => {
+    return { ...val, uid };
+  });
+  return { players };
 };
 
-export default connect(mapStateToProps, { logOutUser })(PlayerList);
+
+export default connect(mapStateToProps, { playersFetch })(PlayerList);

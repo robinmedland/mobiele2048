@@ -3,7 +3,8 @@ import { Actions } from 'react-native-router-flux';
 import {
     PLAYER_UPDATE,
     PLAYER_CREATE,
-    PLAYER_CREATE_SUCCES
+    PLAYER_CREATE_SUCCES,
+    PLAYERS_FETCH_SUCCES
     
 } from './types';
 
@@ -30,3 +31,12 @@ const playerCreateSucces = (dispatch) => {
     Actions.pop();
 };
 
+export const playersFetch = () => {
+    const { currentUser } = firebase.auth();
+    return (dispatch) => {
+        firebase.database().ref(`/users/${currentUser.uid}/players`)
+        .on('value', snapshot => {
+            dispatch({ type: PLAYERS_FETCH_SUCCES, payload: snapshot.val() });
+        });
+    };
+};
