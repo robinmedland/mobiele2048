@@ -27,7 +27,7 @@ const RouterComponent = () => {
             title="Create Player" 
             component={PlayerCreate}
           />
-          <Scene
+          <Scene            
             key="Game"
             title="2048 Crush Records"
             component={Game}

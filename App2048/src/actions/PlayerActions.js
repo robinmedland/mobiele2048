@@ -40,3 +40,15 @@ export const playersFetch = () => {
         });
     };
 };
+
+export const playerDelete = ({ uid }) => {
+    const { currentUser } = firebase.auth();
+
+    return () => {
+        firebase.database().ref(`/users/${currentUser.uid}/players/${uid}`)
+        .remove()
+        .then(() => {
+            Actions.main({ type: 'reset' });
+        });
+    };
+};

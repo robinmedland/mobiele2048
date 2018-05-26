@@ -6,7 +6,7 @@ import { CardSection } from './common';
 class PlayerItem extends Component {
     onRowPress() {
         console.log('klik');
-        Actions.Game();
+        Actions.Game({ player: this.props.player });
     }
     render() {
         const { name, highscore } = this.props.player.item;
@@ -39,7 +39,7 @@ const styles = {
                   
     },
     highScoreStyle: {
-        fontSize: 30,
+        fontSize: 22,
         paddingLeft: 15,
         fontFamily: 'Roboto',
         fontWeight: 'bold'    
