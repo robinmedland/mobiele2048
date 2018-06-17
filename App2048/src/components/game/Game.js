@@ -86,13 +86,11 @@ const styles = {
     
     nameStyle: {
         fontSize: 22,
-        paddingLeft: 15,
-        fontFamily: 'Roboto'               
+        paddingLeft: 15               
     },
     highScoreStyle: {
         fontSize: 22,
         paddingLeft: 15,
-        fontFamily: 'Roboto',
         fontWeight: 'bold'   
     },
     parent: {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { persistStore, autoRehydrate } from 'redux-persist';
 import firebase from 'firebase';
 import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
@@ -21,8 +22,17 @@ class App extends Component {
       }
     
       render() {
-        const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-    
+const store = createStore(
+          reducers, 
+          {}, 
+          compose(
+              applyMiddleware(ReduxThunk),
+              autoRehydrate()
+          )
+        );
+
+        persistStore(store, { storage: AsyncStorage, 
+            whitelist: ['gameBoard'] });
         return (
           <Provider store={store}>
             <Router />
