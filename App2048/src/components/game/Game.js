@@ -25,7 +25,8 @@ class Game extends Component {
     }
 
     render() {
-        const { name, highscore } = this.props.player.item;
+        //const { name, highscore } = this.props.player.item;
+		const { name, highscore } = {name: 'sven', highscore: 433};
         return (
             <Card>
                 <CardSection>
