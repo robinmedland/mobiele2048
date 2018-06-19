@@ -23,7 +23,7 @@ class App extends Component {
       }
     
       render() {
-		  const store = createStore(
+      const store = createStore(
           reducers, 
           {}, 
           compose(
@@ -34,7 +34,7 @@ class App extends Component {
 
         persistStore(store, { storage: AsyncStorage, 
             whitelist: ['gameBoard'] });
-		  
+
         return (
           <Provider store={store}>
             <Router />
