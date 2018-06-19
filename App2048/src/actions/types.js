@@ -11,3 +11,6 @@ export const PLAYER_CREATE = 'player_create';
 export const PLAYER_CREATE_SUCCES = 'player_create_succes';
 
 export const PLAYERS_FETCH_SUCCES = 'players_fetch_succes';
+
+export const SWIPE = 'swipe';
+export const CREATE_GAME = 'create_game';

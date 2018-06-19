@@ -2,15 +2,11 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
 class GameTile extends Component {
-	constructor(props) {
-		super(props);
-		this.value = this.props.value;
-	}
-	
     render() {
+		const { value } = this.props;
         return (
             <View style={styles.child}>
-                <Text style={styles.tileText}>{this.value}</Text>
+                <Text style={styles.tileText}>{value === 0 ? '' : value}</Text>
             </View>
         );
     }    

@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { persistStore, autoRehydrate } from 'redux-persist';
 import firebase from 'firebase';
+import { AsyncStorage } from 'react-native';
 import ReduxThunk from 'redux-thunk';
 import reducers from './reducers';
 import Router from './Router';
@@ -22,7 +23,7 @@ class App extends Component {
       }
     
       render() {
-const store = createStore(
+		  const store = createStore(
           reducers, 
           {}, 
           compose(
@@ -33,6 +34,7 @@ const store = createStore(
 
         persistStore(store, { storage: AsyncStorage, 
             whitelist: ['gameBoard'] });
+		  
         return (
           <Provider store={store}>
             <Router />
