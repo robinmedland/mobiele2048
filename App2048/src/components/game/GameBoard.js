@@ -38,11 +38,9 @@ class GameBoard extends Component {
     })
 
     const config = {
-      velocityThreshold: 0.3,
-      directionalOffsetThreshold: 80
+      velocityThreshold: 0.2,
+      directionalOffsetThreshold: 60
     };
-
-    console.log(this.props, 'Render');
 
     return (
         
@@ -69,11 +67,8 @@ const styles = {
 
 const mapStateToProps = (state) => {
 
-  console.log(state, 'mapStateToProps');
-
   const gameBoard = state.game.board;
-  // const gameBoard = [[5,4,3,1],[3,5,2,6],[4,5,23,65],[34,56,234,543]];
-
+  
   return { gameBoard };
 }
 

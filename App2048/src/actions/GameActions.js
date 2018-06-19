@@ -19,6 +19,7 @@ export const swipeUp = (gameBoard) => {
       }
     }
   }
+  gameBoard = addNumber(gameBoard);
   const newGameBoard = [...gameBoard];  
   return {
     type: SWIPE,
@@ -34,6 +35,7 @@ export const swipeDown = (gameBoard) => {
       }
     }
   }
+  gameBoard = addNumber(gameBoard);
   const newGameBoard = [...gameBoard];  
   return {
     type: SWIPE,
@@ -49,6 +51,7 @@ export const swipeRight = (gameBoard) => {
       }
     }
   }
+  gameBoard = addNumber(gameBoard);
   const newGameBoard = [...gameBoard];
   return {
     type: SWIPE,
@@ -64,12 +67,32 @@ export const swipeLeft = (gameBoard) => {
       }
     }
   }
+  gameBoard = addNumber(gameBoard);
   const newGameBoard = [...gameBoard];
   return {
     type: SWIPE,
     payload: newGameBoard
   };
 };
+
+const addNumber = (gameBoard) => {
+  let empty = [];
+  for(let x = 0; x < gameBoard.length; x++) {
+    for (let y = 0; y < gameBoard.length; y++) {
+      if (gameBoard[y][x] === 0) {
+        empty.push({x,y})
+      }
+    }
+  }
+  if (empty.length === 0) {
+    console.log('GAME OVER');
+    return gameBoard;
+  }
+  console.log(empty);
+  const random = Math.floor(Math.random() * (empty.length -1) );
+  gameBoard[empty[random].y][empty[random].x] = 2;
+  return gameBoard;
+}
 
 const checkAbove = (board, position) => {
   const {x, y} = position  
@@ -122,8 +145,7 @@ const checkUnder = (board, position) => {
   return board;
 }
 
-const checkRight = (board, position) => {
-  console.log(board, position);  
+const checkRight = (board, position) => { 
   const {x, y} = position  
   const cur = board[y][x];
   const neigh = board[y][x+1];
@@ -147,7 +169,6 @@ const checkRight = (board, position) => {
 }
 
 const checkLeft = (board, position) => {
-  console.log(board, position);  
   const {x, y} = position  
   const cur = board[y][x];
   const neigh = board[y][x-1];

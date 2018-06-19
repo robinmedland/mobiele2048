@@ -8,7 +8,6 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
 
-  console.log(state, 'in reducer');
   switch (action.type) {
     case SWIPE:
       return { ...state, board: [...action.payload] };
