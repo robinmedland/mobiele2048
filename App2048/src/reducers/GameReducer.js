@@ -3,7 +3,7 @@ import {
 } from '../actions/types';
 
 const INITIAL_STATE = {
-  board: [[8,0,0,4],[4,0,2,0],[4,2,2,0],[2,0,2,2]]
+  board: []
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -12,7 +12,7 @@ export default (state = INITIAL_STATE, action) => {
     case SWIPE:
       return { ...state, board: [...action.payload] };
     case CREATE_GAME:
-      return state;
+    return { ...state, board: [...action.payload]};
     default:
       return state;
   }
