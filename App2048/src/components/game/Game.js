@@ -4,12 +4,23 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Card, CardSection, Confirm, Button } from '../common';
 import GameBoard from '../game/GameBoard';
-import { playerDelete, createGame } from '../../actions';
+import { endgamevenster, playerDelete, createGame } from '../../actions';
 
 class Game extends Component {   
     //Dit is een bug van esslint, code werkt wel
     state = { showDeleteModal: false, showRestartModal: false };
-      
+
+    onAcceptEndGame() {
+        
+        this.props.createGame();
+        this.props.endgamevenster();
+    }  
+
+    onDeclineEndGame() {
+        
+        Actions.playerList();
+        this.props.endgamevenster();
+    }
 
     onAcceptDelete() {
         const { uid } = this.props.player.item;
@@ -29,9 +40,11 @@ class Game extends Component {
     }
 
     render() {
-        const { name, highscore } = this.props.player.item;
-        // const { name, highscore } = {name: 'sven', highscore: 433};
+        //const { name, highscore } = this.props.player.item;
+        const name = 'Stef';
+        const highscore = '999999';
         const score = this.props.score;
+        const gameOver = this.props.gameOver;
         return (
             <Card>
                 <CardSection>
@@ -83,6 +96,14 @@ class Game extends Component {
                         Do you want to delete this player?
                 </Confirm>
 
+                <Confirm
+                    visible={gameOver}
+                    onAccept={this.onAcceptEndGame.bind(this)}
+                    onDecline={this.onDeclineEndGame.bind(this)}
+                >
+                    !GAME OVER!
+                    Do you want to play another game?
+                </Confirm>
 
             </Card>
         );
@@ -115,10 +136,11 @@ const mapStateToProps = (state) => {
 
     const score = state.game.score;
     const gameBoard = state.game.board;
+    const gameOver = state.game.gameOver;
 
-    return { score, gameBoard };
+    return { score, gameBoard, gameOver };
 
     
 };
 
-export default connect(mapStateToProps, { playerDelete, createGame })(Game);
+export default connect(mapStateToProps, { playerDelete, createGame, endgamevenster  })(Game);
