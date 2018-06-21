@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import { Card, CardSection, Confirm, Button } from '../common';
 import GameBoard from '../game/GameBoard';
-import { playerDelete } from '../../actions';
+import { playerDelete, createGame } from '../../actions';
 
 class Game extends Component {   
     //Dit is een bug van esslint, code werkt wel
@@ -18,15 +19,18 @@ class Game extends Component {
         this.setState({ showDeleteModal: false });
     }
     onAcceptRestart() {
-        console.log('yes');
+
+        this.setState({ showRestartModal: false });
+        this.props.createGame();
+
     }
     onDeclineRestart() {
         this.setState({ showRestartModal: false });
     }
 
     render() {
-        //const { name, highscore } = this.props.player.item;
-        const { name, highscore } = {name: 'sven', highscore: 433};
+        const { name, highscore } = this.props.player.item;
+        // const { name, highscore } = {name: 'sven', highscore: 433};
         const score = this.props.score;
         return (
             <Card>
@@ -110,8 +114,11 @@ const styles = {
 const mapStateToProps = (state) => {
 
     const score = state.game.score;
+    const gameBoard = state.game.board;
 
-    return { score };
+    return { score, gameBoard };
+
+    
 };
 
-export default connect(mapStateToProps, { playerDelete })(Game);
+export default connect(mapStateToProps, { playerDelete, createGame })(Game);

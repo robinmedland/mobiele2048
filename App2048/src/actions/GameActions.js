@@ -169,7 +169,8 @@ const addNumber = (gameBoard) => {
     return gameBoard;
   }
   const random = Math.floor(Math.random() * (empty.length -1) );
-  gameBoard[empty[random].y][empty[random].x] = 2;
+  chosenValue = Math.ran
+  gameBoard[empty[random].y][empty[random].x] = (Math.random() >= 0.9 ? 4 : 2)
   return gameBoard;
 };
 
