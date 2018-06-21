@@ -23,12 +23,13 @@ class Game extends Component {
     
     componentDidUpdate() {
         let highscore = 0;
-        if (this.props.player) highscore = this.props.player.highscore;
-        const score = this.props.score;     
-        if ( score > highscore ) {
-            this.fixhighscore();
+        if (this.props.player) {
+            highscore = this.props.player.highscore;
+            const score = this.props.score; 
+            if ( score > highscore ) {
+                this.fixhighscore();
+            }
         }
-
     }
     onAcceptEndGame() {
         
@@ -43,7 +44,7 @@ class Game extends Component {
 
     onAcceptDelete() {
         const uid = this.props.playeruid;
-        Actions.playerList();
+        Actions.main({ type: 'reset' });
         this.setState({ showDeleteModal: false });
         this.props.playerDelete(uid);
     }

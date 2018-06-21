@@ -17,7 +17,7 @@ export default (state = INITIAL_STATE, action) => {
             console.log(state);
             return {...state, player: action.payload};
         case PLAYER_DELETE_SUCCES:
-            return {...state, ...INITIAL_STATE }
+            return {...state};
         default: 
             return state;   
     }

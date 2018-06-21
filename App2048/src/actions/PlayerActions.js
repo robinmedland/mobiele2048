@@ -7,7 +7,8 @@ import {
     PLAYERS_FETCH_SUCCES,
     PLAYER_CREATE_FAIL,
     PLAYER_FETCH_SUCCESS,
-    PLAYER_DELETE_SUCCES
+    PLAYER_DELETE_SUCCES,
+    PLAYER_FETCH
 } from './types';
 
 export const setHighscore = (uid, score) => {
@@ -86,9 +87,11 @@ export const playerDelete = ( uid ) => {
     const { currentUser } = firebase.auth();
     return (dispatch) => {
         firebase.database().ref(`/users/${currentUser.uid}/players/${uid}`)
-        .remove()
+        .remove((error) => {
+            console.log(error);
+        })
         .then(() => {
-            dispatch({ type: PLAYER_DELETE_SUCCES });
+            playersFetch();
         });
     };
 };
