@@ -1,5 +1,3 @@
-import { Actions } from 'react-native-router-flux';
-
 import {
   SWIPE,
   CREATE_GAME
@@ -15,108 +13,129 @@ export const createGame = () => {
   }
   let rand = 0;
   while (rand < 2) {
-    console.log(rand);
     let random = Math.floor(Math.random() * (16 -1) );
-    console.log("random:" + random);
     const x = Math.floor(random / 4);
     const y = random % 4;
-    console.log("x: " + x, "y: " + y)
     if (arr[x][y] === 0) {
       arr[x][y] = 2;
       rand++;
     }
   }
-  
-  console.log(arr);  
 
   return {
     type: CREATE_GAME,
     payload: arr
   }
-}
-
-export const swipeUp = (gameBoard) => {
-  let changed = false;
-  for (let y = 1 ; y < gameBoard.length ; y++) {
-    for (let x = 0 ; x < gameBoard.length ; x++) {
-      if (gameBoard[y][x] !== 0) {
-        let resp = checkAbove(gameBoard, {x, y});
-        gameBoard = resp.board;
-        changed = resp.changed;
-      }
-    }
-  }
-  if (changed) {
-    gameBoard = addNumber(gameBoard);
-  }
-  const newGameBoard = [...gameBoard];  
-  return {
-    type: SWIPE,
-    payload: newGameBoard
-  };
-};
-
-export const swipeDown = (gameBoard) => {
-  let changed = false;
-  for (let y = gameBoard.length -2 ; y >= 0 ; y--) {
-    for (let x = 0 ; x < gameBoard.length ; x++) {
-      if (gameBoard[y][x] !== 0) {
-        let resp = checkUnder(gameBoard, {x, y});
-        gameBoard = resp.board;
-        changed = resp.changed
-      }
-    }
-  }
-  if (changed) {
-    gameBoard = addNumber(gameBoard);    
-  }
-  const newGameBoard = [...gameBoard];  
-  return {
-    type: SWIPE,
-    payload: newGameBoard
-  };
 };
 
 export const swipeRight = (gameBoard) => {
   let changed = false;
-  for (let x = gameBoard.length -2  ; x >= 0 ; x--) {
-    for (let y = 0 ; y < gameBoard.length ; y++) {
-      if (gameBoard[y][x] !== 0) {
-        let resp = checkRight(gameBoard, {x, y});
-        gameBoard = resp.board;
-        changed = resp.changed;
+  for (let y = 0 ; y < gameBoard.length ; y++) {
+      let wasAdded = false; // next row
+      for (let x = gameBoard.length -2; x >= 0; x--) { //last column can't move to the right
+          if (gameBoard[y][x] !== 0) {
+              //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
+              let resp = check(gameBoard, {x, y}, -1, +1, wasAdded);
+              if (resp.changed === true) changed = true; //To add new number
+              wasAdded = resp.added; //To check if next neighbour can add up
+              gameBoard = resp.gameBoard;
+          }
       }
-    }
   }
-  if (changed) {
-    gameBoard = addNumber(gameBoard);    
-  }
-  const newGameBoard = [...gameBoard];
-  return {
-    type: SWIPE,
-    payload: newGameBoard
-  };
+  return swipeFinished(changed, gameBoard);
 };
 
 export const swipeLeft = (gameBoard) => {
   let changed = false;
-  for (let x = 1  ; x < gameBoard.length  ; x++) {
-    for (let y = 0 ; y < gameBoard.length ; y++) {
-      if (gameBoard[y][x] !== 0) {
-        let resp = checkLeft(gameBoard, {x, y});
-        gameBoard = resp.board;
-        changed = resp.changed;
+  for (let y = 0 ; y < gameBoard.length ; y++) {
+      let wasAdded = false; // next row
+      for (let x = 1; x < gameBoard.length; x++) { //first column can't move to the right
+          if (gameBoard[y][x] !== 0) {
+              //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
+              let resp = check(gameBoard, {x, y}, -1, -1, wasAdded);
+              if (resp.changed === true) changed = true; //To add new number
+              wasAdded = resp.added; //To check if next neighbour can add up
+              gameBoard = resp.gameBoard;
+          }
       }
-    }
   }
+  return swipeFinished(changed, gameBoard);
+};
+
+export const swipeDown = (gameBoard) => {
+  let changed = false;
+  for (let x = 0; x < gameBoard.length; x++) {
+      let wasAdded = false; // next row
+      for (let y = gameBoard.length-2 ; y >= 0 ; y--) { //last row can't move down
+          if (gameBoard[y][x] !== 0) {
+              //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
+              let resp = check(gameBoard, {x, y}, +1, +1, wasAdded);
+              if (resp.changed === true) changed = true; //To add new number
+              wasAdded = resp.added; //To check if next neighbour can add up
+              gameBoard = resp.gameBoard;
+          }
+      }
+  }
+  return swipeFinished(changed, gameBoard);
+};
+
+export const swipeUp = (gameBoard) => {
+  let changed = false;
+  for (let x = 0; x < gameBoard.length; x++) {
+      let wasAdded = false; // next row
+      for (let y = 1 ; y < gameBoard.length -1 ; y++) { //first row can't move up
+          if (gameBoard[y][x] !== 0) {
+              //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
+              let resp = check(gameBoard, {x, y}, +1, -1, wasAdded);
+              if (resp.changed === true) changed = true; //To add new number
+              wasAdded = resp.added; //To check if next neighbour can add up
+              gameBoard = resp.gameBoard;
+          }
+      }
+  }
+  return swipeFinished(changed, gameBoard);
+};
+
+const swipeFinished = (changed, gameBoard) => {
   if (changed) {
-    gameBoard = addNumber(gameBoard);    
+      console.log('true');
+      gameBoard = addNumber(gameBoard);
   }
   const newGameBoard = [...gameBoard];
   return {
-    type: SWIPE,
-    payload: newGameBoard
+      type: SWIPE,
+      payload: newGameBoard
   };
+};
+
+/**
+ *
+ * @param gameBoard 
+ * @param position current check position
+ * @param direction of the swipe gesture -> -1 = horizontal, +1 = vertical
+ * @param vector of the swipe gesture => -1 = (left|up), +1 = (right|down)
+ * @param wasAdded boolean if first not zero neighbour is added with his neighbour
+ * @returns gameBoard, changed, added
+ */
+const check = (gameBoard, position, direction, vector, wasAdded) => {
+  let neigh = {};
+  if (direction === -1) neigh = {x: position.x + vector, y: position.y};
+  if (direction === +1) neigh = {x: position.x, y: position.y + vector};
+  //Check if neighbour is out of range
+  if (neigh.x >= gameBoard.length || neigh.x < 0 || neigh.y >= gameBoard.length || neigh.y < 0) {
+      return {gameBoard, changed: false, added: wasAdded};
+  }
+  //Check if neighbour is empty
+  if (gameBoard[neigh.y][neigh.x] === 0) {
+      gameBoard[neigh.y][neigh.x] = gameBoard[position.y][position.x];
+      gameBoard[position.y][position.x] = 0;
+      const resp = check(gameBoard, {x: neigh.x, y: neigh.y}, direction, vector, wasAdded);
+      return {gameBoard: resp.gameBoard, changed: true, added: resp.added};
+  } else if (gameBoard[neigh.y][neigh.x] === gameBoard[position.y][position.x] && wasAdded === false) {
+      gameBoard[neigh.y][neigh.x] += gameBoard[neigh.y][neigh.x];
+      gameBoard[position.y][position.x] = 0;
+      return {gameBoard, changed: true, added: true};
+  } else return {gameBoard, changed: false, added: false};
 };
 
 const addNumber = (gameBoard) => {
@@ -132,117 +151,9 @@ const addNumber = (gameBoard) => {
     console.log('GAME OVER');
     return gameBoard;
   }
-  console.log(empty);
   const random = Math.floor(Math.random() * (empty.length -1) );
   gameBoard[empty[random].y][empty[random].x] = 2;
   return gameBoard;
-}
-
-const checkAbove = (board, position) => {
-  let changed = false;
-  const {x, y} = position  
-  const cur = board[y][x];
-  const neigh = board[y-1][x];
-  if (neigh !== 0) {
-    if(cur === neigh) {
-      board[y-1][x] += cur;
-      board[y][x] = 0;
-      changed = true;
-      if (y-1 > 0) {
-        board = checkAbove(board, {x: x, y: y-1}).board;
-      }
-    } 
-  } else {
-    board[y-1][x] = cur;
-    board[y][x] = 0;
-    changed = true;
-    if (y-1 > 0) {
-      board = checkAbove(board, {x: x, y: y-1}).board;
-    }
-  }
-  return {board, changed};
-}
-
-const checkUnder = (board, position) => {
-  let changed = false;
-  const {x, y} = position  
-  const cur = board[y][x];
-  const neigh = board[y+1][x];
-  if (neigh !== 0) {
-    if(cur === neigh) {
-      board[y+1][x] += cur;
-      board[y][x] = 0;
-      changed = true;
-      /**
-       * board.length -3 omdat
-       * board.length = 4
-       * board[4] -> buiten het bereik
-       * board[3] -> is laatste element van array (kan niet met opschuiven)
-       * board[2] -> voorlaatste element van array (kan dus nog één lager)
-       */
-      if (y+1 < board.length - 3) {
-        board = checkUnder(board, {x: x, y: y+1}).board;
-      }
-    } 
-  } else {
-    board[y+1][x] = cur;
-    board[y][x] = 0;
-    changed = true;
-    if (y-1 < board.length - 3) {
-      board = checkUnder(board, {x: x, y: y+1}).board;
-    }
-  }
-  return {board, changed};
-}
-
-const checkRight = (board, position) => {
-  let changed = false;
-  const {x, y} = position  
-  const cur = board[y][x];
-  const neigh = board[y][x+1];
-  if(neigh != 0) {
-    if(cur === neigh) {
-      board[y][x+1] += cur;
-      board[y][x] = 0;
-      changed = true;
-      if (x+1 < board.length - 3) {
-        board = checkRight(board, {x: x+1, y:y}).board;
-      }
-    }
-  } else {
-    board[y][x+1] = cur;
-    board[y][x] = 0;
-    changed = true;
-    if (x-1 < board.length -3) {
-      board = checkRight(board, {x: x+1, y:y}).board;
-    } 
-  }
-  return {board, changed};
-}
-
-const checkLeft = (board, position) => {
-  let changed = false;
-  const {x, y} = position  
-  const cur = board[y][x];
-  const neigh = board[y][x-1];
-  if(neigh != 0) {
-    if(cur === neigh) {
-      board[y][x-1] += cur;
-      board[y][x] = 0;
-      changed = true;
-      if (x-1 > 0) {
-        board = checkLeft(board, {x: x-1, y:y}).board;
-      }
-    }
-  } else {
-    board[y][x-1] = cur;
-    board[y][x] = 0;
-    changed = true;
-    if (x-1 > 0) {
-      board = checkLeft(board, {x: x-1, y:y}).board;
-    } 
-  }
-  return {board, changed};
-}
+};
 
 

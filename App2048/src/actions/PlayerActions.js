@@ -16,6 +16,7 @@ export const playerUpdate = ({ prop, value }) => {
 };
 
 export const playerCreate = ({ name, highscore }) => {
+    
     return (dispatch) => {
     dispatch({ type: PLAYER_CREATE });
     const { currentUser } = firebase.auth();

@@ -13,8 +13,9 @@ class GameBoard extends Component {
     this.props.createGame();
   }
 
-  onSwipe(gestureName, gestureState) {
+  onSwipe(gestureName) {
       const {SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT} = swipeDirections;
+      console.log(gestureName);
       switch (gestureName) {
         case SWIPE_UP:
           this.props.swipeUp(this.props.gameBoard);
@@ -35,7 +36,7 @@ class GameBoard extends Component {
 
     const rows = this.props.gameBoard.map(function(row,index){
       return <GameRow key={index} values={row}/>;
-    })
+    });
 
     const config = {
       velocityThreshold: 0.2,
@@ -70,6 +71,6 @@ const mapStateToProps = (state) => {
   const gameBoard = state.game.board;
   
   return { gameBoard };
-}
+};
 
 export default connect(mapStateToProps, {swipeUp, swipeDown, swipeRight, swipeLeft, createGame})(GameBoard);
