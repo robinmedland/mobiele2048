@@ -1,6 +1,7 @@
 import {
   SWIPE,
-  CREATE_GAME
+  CREATE_GAME,
+  SCORE
 } from './types';
 
 export const createGame = () => {
@@ -102,10 +103,26 @@ const swipeFinished = (changed, gameBoard) => {
       gameBoard = addNumber(gameBoard);
   }
   const newGameBoard = [...gameBoard];
-  return {
-      type: SWIPE,
-      payload: newGameBoard
-  };
+  const score = calculateScore(newGameBoard);
+  return (dispatch) => {
+      dispatch({type: SWIPE, payload: newGameBoard});
+      dispatch({type: SCORE, payload: score});
+  }
+};
+
+/**
+ *
+ * @param gameBoard
+ * @returns the new gameBoard score
+ */
+const calculateScore = (gameBoard) => {
+  let score = 0;
+  for (let x = 0; x < gameBoard.length; x++) {
+      for (let y = 0; y < gameBoard.length; y++) {
+          score += gameBoard[y][x];
+      }
+  }
+  return score;
 };
 
 /**

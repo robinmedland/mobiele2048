@@ -26,7 +26,8 @@ class Game extends Component {
 
     render() {
         //const { name, highscore } = this.props.player.item;
-		const { name, highscore } = {name: 'sven', highscore: 433};
+        const { name, highscore } = {name: 'sven', highscore: 433};
+        const score = this.props.score;
         return (
             <Card>
                 <CardSection>
@@ -37,7 +38,7 @@ class Game extends Component {
                         {highscore}
                     </Text>
                     <Text style={styles.highScoreStyle}>
-                        0
+                        {score}
                     </Text>
                 </CardSection>
 
@@ -106,4 +107,11 @@ const styles = {
     }
 };
 
-export default connect(null, { playerDelete })(Game);
+const mapStateToProps = (state) => {
+
+    const score = state.game.score;
+
+    return { score };
+};
+
+export default connect(mapStateToProps, { playerDelete })(Game);
