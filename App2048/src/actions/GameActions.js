@@ -12,7 +12,7 @@ export const endgamevenster = () =>  {
    type: ENDGAME,
    payload: false
 }
-}
+};
 
 export const createGame = () => {
   let arr = [];
@@ -40,7 +40,7 @@ export const createGame = () => {
 };
 
 export const swipeRight = ( gameBoard ) => {
-  let gedaan = false;
+  let changed = false;
   for (let y = 0 ; y < gameBoard.length ; y++) {
       let wasAdded = false; // next row
       for (let x = gameBoard.length -2; x >= 0; x--) { //last column can't move to the right
@@ -48,14 +48,16 @@ export const swipeRight = ( gameBoard ) => {
               //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
               let resp = check(gameBoard, {x, y}, -1, +1, wasAdded);
               wasAdded = resp.added; //To check if next neighbour can add up
+              if (resp.changed) changed = true;
               gameBoard = resp.gameBoard;
           }
       }
   }
-  return swipeFinished(gameBoard, gedaan );
+  return swipeFinished(gameBoard, changed);
 };
 
 export const swipeLeft = ( gameBoard ) => {
+  let changed = false;
   for (let y = 0 ; y < gameBoard.length ; y++) {
       let wasAdded = false; // next row
       for (let x = 1; x < gameBoard.length; x++) { //first column can't move to the right
@@ -63,14 +65,16 @@ export const swipeLeft = ( gameBoard ) => {
               //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
               let resp = check(gameBoard, {x, y}, -1, -1, wasAdded);
               wasAdded = resp.added; //To check if next neighbour can add up
+              if (resp.changed) changed = true;
               gameBoard = resp.gameBoard;
           }
       }
   }
-  return swipeFinished(gameBoard );
+  return swipeFinished(gameBoard, changed);
 };
 
 export const swipeDown = (gameBoard, gameOver) => {
+  let changed = false;
   for (let x = 0; x < gameBoard.length; x++) {
       let wasAdded = false; // next row
       for (let y = gameBoard.length-2 ; y >= 0 ; y--) { //last row can't move down
@@ -78,14 +82,16 @@ export const swipeDown = (gameBoard, gameOver) => {
               //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
               let resp = check(gameBoard, {x, y}, +1, +1, wasAdded);
               wasAdded = resp.added; //To check if next neighbour can add up
+              if (resp.changed) changed = true;
               gameBoard = resp.gameBoard;
           }
       }
   }
-  return swipeFinished(gameBoard );
+  return swipeFinished(gameBoard, changed);
 };
 
 export const swipeUp = (gameBoard ) => {
+  let changed = false;
   for (let x = 0; x < gameBoard.length; x++) {
       let wasAdded = false; // next row
       for (let y = 1 ; y < gameBoard.length -1 ; y++) { //first row can't move up
@@ -93,29 +99,75 @@ export const swipeUp = (gameBoard ) => {
               //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
               let resp = check(gameBoard, {x, y}, +1, -1, wasAdded);
               wasAdded = resp.added; //To check if next neighbour can add up
+              if (resp.changed) changed = true;
               gameBoard = resp.gameBoard;
           }
       }
   }
-  return swipeFinished(gameBoard);
+  return swipeFinished(gameBoard, changed);
 };
 
-const swipeFinished = (gameBoard) => {
+const checkIfEnding = (gameBoard) => {
+  for (let x = 0 ; x < gameBoard.length ; x++) {
+      for (let y = 0 ; y < gameBoard.length ; y++) {
+          if (checkNeighbours(gameBoard, {x, y})) return false;
+      }
+  }
+  return true;
+};
 
-  const resp = addNumber(gameBoard);
-  const changed = resp.changed;
-  const changedGameBoard = resp.gameBoard;
-  //If end game
-  if (!changed) {
-      return (dispatch) => {
-          dispatch({type: ENDGAME, payload: true})
+/**
+* Return true if there is a swipe possibility;
+*/
+const checkNeighbours = (gameBoard, position) => {
+  const x = position.x;
+  const y = position.y;
+  const val = gameBoard[y][x];
+  let canSwipe = false;
+  if (x-1 >= 0) {
+      if (checkNeighbour(val, gameBoard[y][x-1])) return true;
+  }
+  if (x+1 < gameBoard.length) {
+      if (checkNeighbour(val, gameBoard[y][x+1])) return true;
+  }
+  if (y-1 >= 0) {
+      if (checkNeighbour(val, gameBoard[y-1][x])) return true;
+  }
+  if (y+1 < gameBoard.length) {
+      if (checkNeighbour(val, gameBoard[y+1][x])) return true;
+  }
+  return false;
+};
+
+/**
+* Return true if neighbour is same or empty;
+*/
+const checkNeighbour = (val, neighbour) => {
+  return val === neighbour || neighbour === 0;
+};
+
+const swipeFinished = (gameBoard, changed) => {
+  console.log(changed);
+  if (changed) {
+      const resp = addNumber(gameBoard);
+      const changedGameBoard = resp.gameBoard;
+      //If end game
+      if (checkIfEnding(changedGameBoard)) {
+          return (dispatch) => {
+              dispatch({type: ENDGAME, payload: true})
+          }
+      } else {
+          const newGameBoard = [...changedGameBoard];
+          const score = calculateScore(newGameBoard);
+          console.log('Game is ending: ' + checkIfEnding(newGameBoard));
+          return (dispatch) => {
+              dispatch({type: SWIPE, payload: newGameBoard});
+              dispatch({type: SCORE, payload: score});
+          }
       }
   } else {
-      const newGameBoard = [...changedGameBoard];
-      const score = calculateScore(newGameBoard);
       return (dispatch) => {
-          dispatch({type: SWIPE, payload: newGameBoard});
-          dispatch({type: SCORE, payload: score});
+          dispatch({type: SWIPE, payload: gameBoard});
       }
   }
 };
@@ -165,6 +217,7 @@ const check = (gameBoard, position, direction, vector, wasAdded) => {
 };
 
 const addNumber = (gameBoard) => {
+  console.log('AddNumber');
   let empty = [];
   for(let x = 0; x < gameBoard.length; x++) {
     for (let y = 0; y < gameBoard.length; y++) {
@@ -180,6 +233,7 @@ const addNumber = (gameBoard) => {
   } else {
       const random = Math.floor(Math.random() * (empty.length -1) );
       gameBoard[empty[random].y][empty[random].x] = (Math.random() >= 0.9 ? 4 : 2);
+      console.log('Added new number: ' + empty[random].x + ' | ' + empty[random].y);
       return {gameBoard, changed: true};
   }
 };

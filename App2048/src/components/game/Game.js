@@ -4,12 +4,20 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Card, CardSection, Confirm, Button } from '../common';
 import GameBoard from '../game/GameBoard';
-import { endgamevenster, playerDelete, createGame } from '../../actions';
+import { setHighscore, endgamevenster, playerDelete, createGame, playerUpdate } from '../../actions';
 
 class Game extends Component {   
     //Dit is een bug van esslint, code werkt wel
     state = { showDeleteModal: false, showRestartModal: false };
 
+    componentDidUpdate() {
+        const { highscore } = this.props.player.item;
+        const score = this.props.score;        
+        if ( score > highscore ) {
+            this.fixhighscore();
+        }
+        
+    }
     onAcceptEndGame() {
         
         this.props.createGame();
@@ -33,18 +41,21 @@ class Game extends Component {
 
         this.setState({ showRestartModal: false });
         this.props.createGame();
-
     }
     onDeclineRestart() {
         this.setState({ showRestartModal: false });
     }
+    fixhighscore() {
+        const { uid } = this.props.player.item;
+        const score = this.props.score;
+        this.props.setHighscore(uid, score);
+    }
 
     render() {
-        //const { name, highscore } = this.props.player.item;
-        const name = 'Stef';
-        const highscore = '999999';
+        const { name, highscore } = this.props.player.item;
         const score = this.props.score;
         const gameOver = this.props.gameOver;
+
         return (
             <Card>
                 <CardSection>
@@ -143,4 +154,4 @@ const mapStateToProps = (state) => {
     
 };
 
-export default connect(mapStateToProps, { playerDelete, createGame, endgamevenster  })(Game);
+export default connect(mapStateToProps, { setHighscore, playerDelete, createGame, endgamevenster, playerUpdate })(Game);

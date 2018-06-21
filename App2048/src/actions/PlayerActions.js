@@ -8,6 +8,16 @@ import {
     
 } from './types';
 
+export const setHighscore = (uid, score) => {
+    const { currentUser } = firebase.auth();
+    return () => {
+        firebase.database().ref(`/users/${currentUser.uid}/players/${uid}`).update({
+            highscore: score
+        }).then(() => playerUpdate('highscore', score))
+    }
+
+}
+
 export const playerUpdate = ({ prop, value }) => {
     return {
         type: PLAYER_UPDATE,

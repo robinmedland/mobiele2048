@@ -10,7 +10,7 @@ const RouterComponent = () => {
     <Router>
       <Scene key="root" hideNavBar>
 	      <Scene key="auth">
-          <Scene key="login" component={LoginForm} title="Please Login" />
+          <Scene key="login" component={LoginForm} title="Login or register" />
         </Scene>
 
         <Scene key="main">
@@ -32,7 +32,6 @@ const RouterComponent = () => {
             key="Game"
             title="2048 Crush Records"
             component={Game}
-			//initial
           />
         </Scene>
       </Scene>

@@ -17,7 +17,6 @@ export default (state = INITIAL_STATE, action) => {
         case PLAYER_CREATE:
             return { ...state, loading: true };
         case PLAYER_CREATE_SUCCES:
-            console.log('test');
             return { ...state, ...INITIAL_STATE };
         default:
             return state;

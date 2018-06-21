@@ -34,6 +34,7 @@ class LoginForm extends Component {
   render() {
     return (
       <Card>
+
         <CardSection>
           <Input
             label="Email"
@@ -70,7 +71,8 @@ const styles = {
     fontSize: 20,
     alignSelf: 'center',
     color: 'red'
-  }
+  },
+  
 };
 
 const mapStateToProps = ({ auth }) => {

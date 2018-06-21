@@ -17,7 +17,7 @@ export default (state = INITIAL_STATE, action) => {
       console.log(action.payload);
       return { ...state, score: action.payload };
     case CREATE_GAME:
-    return { ...state, board: [...action.payload]};
+    return { ...state, score: INITIAL_STATE.score, board: [...action.payload]};
     case ENDGAME:
     console.log(action.payload);
     return { ...state, gameOver: action.payload }; 
