@@ -39,7 +39,7 @@ class GameBoard extends Component {
     });
 
     const config = {
-      velocityThreshold: 0.2,
+      velocityThreshold: 0.7,
       directionalOffsetThreshold: 60
     };
 

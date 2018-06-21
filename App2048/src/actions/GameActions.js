@@ -94,7 +94,7 @@ export const swipeUp = (gameBoard ) => {
   let changed = false;
   for (let x = 0; x < gameBoard.length; x++) {
       let wasAdded = false; // next row
-      for (let y = 1 ; y < gameBoard.length -1 ; y++) { //first row can't move up
+      for (let y = 1 ; y < gameBoard.length; y++) { //first row can't move up
           if (gameBoard[y][x] !== 0) {
               //check(gameboard, postion, direction (horizontal/vertical), zin (right/left, up/down), wasAdded)
               let resp = check(gameBoard, {x, y}, +1, -1, wasAdded);

@@ -16,6 +16,11 @@ class Game extends Component {
 
     }
     
+    componentWillUnmount() {
+        this.setState({ showDeleteModal: false });
+        this.setState({ showRestartModal: false });
+    }
+    
     componentDidUpdate() {
         let highscore = 0;
         if (this.props.player) highscore = this.props.player.highscore;

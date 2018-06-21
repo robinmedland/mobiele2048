@@ -20,7 +20,7 @@ class App extends Component {
         };
     
         if (!firebase.apps.length) {
-          firebase.initializeApp({});
+          firebase.initializeApp(config);
         }
       }
     
