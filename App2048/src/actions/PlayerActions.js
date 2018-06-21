@@ -84,13 +84,11 @@ export const playerFetch = (uid) => {
 
 export const playerDelete = ( uid ) => {
     const { currentUser } = firebase.auth();
-
     return (dispatch) => {
         firebase.database().ref(`/users/${currentUser.uid}/players/${uid}`)
         .remove()
         .then(() => {
             dispatch({ type: PLAYER_DELETE_SUCCES });
-            Actions.main({ type: 'reset' });
         });
     };
 };

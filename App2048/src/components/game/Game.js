@@ -11,14 +11,14 @@ class Game extends Component {
     state = { showDeleteModal: false, showRestartModal: false };
 
     componentWillMount() {
-        console.log(this.props);
         this.props.playerFetch(this.props.playeruid);
         // HOI STEF, HOE GAAT IE?
 
     }
     
     componentDidUpdate() {
-        const { highscore } = this.props.player;
+        let highscore = 0;
+        if (this.props.player) highscore = this.props.player.highscore;
         const score = this.props.score;     
         if ( score > highscore ) {
             this.fixhighscore();
@@ -32,13 +32,14 @@ class Game extends Component {
     }  
 
     onDeclineEndGame() {
-        
         Actions.playerList();
         this.props.endgamevenster();
     }
 
     onAcceptDelete() {
         const uid = this.props.playeruid;
+        Actions.playerList();
+        this.setState({ showDeleteModal: false });
         this.props.playerDelete(uid);
     }
     onDeclineDelete() {
@@ -59,7 +60,12 @@ class Game extends Component {
     }
 
     render() {
-        const { name, highscore } = this.props.player;
+        let name = '';
+        let highscore = 0;
+        if (this.props.player !== null) {
+            name = this.props.player.name;
+            highscore = this.props.player.highscore;
+        }
         const score = this.props.score;
         const gameOver = this.props.gameOver;
 
