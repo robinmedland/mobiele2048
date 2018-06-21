@@ -5,6 +5,11 @@ import { emailChanged, passwordChanged, loginUser } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
+  componentWillMount() {
+    this.setState({ showDeleteModal: false });
+    this.setState({ showRestartModal: false });
+  }
+  
   onEmailChange(text) {
     this.props.emailChanged(text);
   }

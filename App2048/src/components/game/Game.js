@@ -11,9 +11,9 @@ class Game extends Component {
     state = { showDeleteModal: false, showRestartModal: false };
 
     componentWillMount() {
+        this.setState({ showDeleteModal: false });
+        this.setState({ showRestartModal: false });
         this.props.playerFetch(this.props.playeruid);
-        // HOI STEF, HOE GAAT IE?
-
     }
     
     componentWillUnmount() {
