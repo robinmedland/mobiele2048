@@ -25,9 +25,22 @@ export const passwordChanged = (text) => {
 };
 
 export const loginUser = ({ email, password }) => {
-  return (dispatch) => {
-    dispatch({ type: LOGIN_USER });
 
+  let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+  if(reg.test(email) === false)
+  {
+  return (dispatch) => {
+    loginUserFail(dispatch, 'Use a valid Email-address');
+  }
+
+}
+if ( password.length < 6) {
+  return (dispatch) => {
+    loginUserFail(dispatch, 'Password minimum length is 6');
+  }
+}
+return (dispatch) => {
+  dispatch({ type: LOGIN_USER });
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then(user => loginUserSuccess(dispatch, user))
       .catch((error) => {
@@ -35,7 +48,7 @@ export const loginUser = ({ email, password }) => {
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
           .then(user => loginUserSuccess(dispatch, user))
-          .catch(() => loginUserFail(dispatch));
+          .catch(() => loginUserFail(dispatch, 'Failed Authentication'));
       });
   };
 };
@@ -53,8 +66,8 @@ export const logOutUser = () => {
   };
 };
 
-const loginUserFail = (dispatch) => {
-  dispatch({ type: LOGIN_USER_FAIL });
+const loginUserFail = (dispatch, message) => {
+  dispatch({ type: LOGIN_USER_FAIL, payload: message });
 };
 
 const loginUserSuccess = (dispatch, user) => {

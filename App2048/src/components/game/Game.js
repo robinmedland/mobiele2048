@@ -4,19 +4,26 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Card, CardSection, Confirm, Button } from '../common';
 import GameBoard from '../game/GameBoard';
-import { setHighscore, endgamevenster, playerDelete, createGame, playerUpdate } from '../../actions';
+import { setHighscore, endgamevenster, playerDelete, createGame, playerUpdate, playerFetch } from '../../actions';
 
 class Game extends Component {   
     //Dit is een bug van esslint, code werkt wel
     state = { showDeleteModal: false, showRestartModal: false };
 
+    componentWillMount() {
+        console.log(this.props);
+        this.props.playerFetch(this.props.playeruid);
+        // HOI STEF, HOE GAAT IE?
+
+    }
+    
     componentDidUpdate() {
-        const { highscore } = this.props.player.item;
-        const score = this.props.score;        
+        const { highscore } = this.props.player;
+        const score = this.props.score;     
         if ( score > highscore ) {
             this.fixhighscore();
         }
-        
+
     }
     onAcceptEndGame() {
         
@@ -31,28 +38,28 @@ class Game extends Component {
     }
 
     onAcceptDelete() {
-        const { uid } = this.props.player.item;
-        this.props.playerDelete({ uid });
+        const uid = this.props.playeruid;
+        this.props.playerDelete(uid);
     }
     onDeclineDelete() {
         this.setState({ showDeleteModal: false });
     }
     onAcceptRestart() {
-
         this.setState({ showRestartModal: false });
         this.props.createGame();
     }
     onDeclineRestart() {
         this.setState({ showRestartModal: false });
     }
+    
     fixhighscore() {
-        const { uid } = this.props.player.item;
+        const uid = this.props.playeruid;
         const score = this.props.score;
         this.props.setHighscore(uid, score);
     }
 
     render() {
-        const { name, highscore } = this.props.player.item;
+        const { name, highscore } = this.props.player;
         const score = this.props.score;
         const gameOver = this.props.gameOver;
 
@@ -145,13 +152,11 @@ const styles = {
 
 const mapStateToProps = (state) => {
 
-    const score = state.game.score;
-    const gameBoard = state.game.board;
-    const gameOver = state.game.gameOver;
+    const { score, gameOver, board } = state.game;
+    const { player } = state.players;
 
-    return { score, gameBoard, gameOver };
-
+    return { score, gameBoard: board, gameOver, player };
     
 };
 
-export default connect(mapStateToProps, { setHighscore, playerDelete, createGame, endgamevenster, playerUpdate })(Game);
+export default connect(mapStateToProps, { setHighscore, playerDelete, createGame, endgamevenster, playerUpdate, playerFetch })(Game);

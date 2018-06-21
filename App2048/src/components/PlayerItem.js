@@ -5,8 +5,7 @@ import { CardSection } from './common';
 
 class PlayerItem extends Component {
     onRowPress() {
-        console.log('klik');
-        Actions.Game({ player: this.props.player });
+        Actions.Game({ playeruid: this.props.player.item.uid });
     }
     render() {
         const { name, highscore } = this.props.player.item;

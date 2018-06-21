@@ -49,7 +49,7 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-  const players = _.map(state.players, (val, uid) => {
+  const players = _.map(state.players.players, (val, uid) => {
     return { ...val, uid };
   });
   return { players };
