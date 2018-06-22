@@ -6,8 +6,11 @@ import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class LoginForm extends Component {
   componentWillMount() {
+    console.log(this.state);
     this.setState({ showDeleteModal: false });
     this.setState({ showRestartModal: false });
+    
+    
   }
   
   onEmailChange(text) {
